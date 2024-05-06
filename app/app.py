@@ -6,6 +6,7 @@ from wtforms import DateField
 import datetime
 import time
 import psycopg2
+import logging
 from opentelemetry import trace
 from opentelemetry.trace.status import StatusCode
 from opentelemetry.sdk.trace import TracerProvider
@@ -18,21 +19,33 @@ from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExport
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.instrumentation.psycopg2 import Psycopg2Instrumentor
 
-resource = Resource(attributes={"service.name": "Wylies-MacBook-Air", "os-version": 14.1, "cluster": "A", "datacentre": "us-east-1a"})
-
-#Set up OpenTelemetry
-provider = TracerProvider(resource=resource)
-processor = BatchSpanProcessor(ConsoleSpanExporter())
-provider.add_span_processor(processor)
-
-# Sets the global default tracer provider
-trace.set_tracer_provider(provider)
-
-# Creates a tracer from the global tracer provider
-tracer = trace.get_tracer("my.tracer.name")
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'test123'  # Ensure you have a secret key for CSRF protection
+
+# Resource configuration for tracing
+resource = Resource(attributes={
+    "service.name": "Wylies-MacBook-Air",
+    "os-version": 14.1,
+    "cluster": "A",
+    "datacentre": "us-east-1a"
+})
+
+# Configure the OTLP exporter
+otlp_exporter = OTLPSpanExporter(
+    endpoint="localhost:4317",  # Endpoint of the Otel Collector
+    insecure=True  # Use TLS in production environments
+)
+
+# Set up OpenTelemetry Tracer Provider with OTLP exporter
+provider = TracerProvider(resource=resource)
+otlp_processor = BatchSpanProcessor(otlp_exporter)
+provider.add_span_processor(otlp_processor)
+trace.set_tracer_provider(provider)
+
+tracer = trace.get_tracer("my.tracer.name")
+
+#Adding logging to debug issue: 
+logging.basicConfig(level=logging.DEBUG)
 
 class ExerciseForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])
