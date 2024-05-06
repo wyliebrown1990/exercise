@@ -4,10 +4,19 @@ receivers:
       grpc:
 
 exporters:
+  jaeger:
+    endpoint: "jaeger:14250"  # Jaeger gRPC endpoint
+    tls_enabled: false
+  prometheus:
+    endpoint: "0.0.0.0:9464"
+
   logging:
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [logging]
+      exporters: [jaeger, logging]  # Add Jaeger to the trace pipeline
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus, logging]  # Prometheus for metrics pipeline
