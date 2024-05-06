@@ -14,9 +14,13 @@ from opentelemetry.sdk.trace.export import (
     BatchSpanProcessor,
     ConsoleSpanExporter,
 )
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry.instrumentation.psycopg2 import Psycopg2Instrumentor
 
 resource = Resource(attributes={"service.name": "Wylies-MacBook-Air", "os-version": 14.1, "cluster": "A", "datacentre": "us-east-1a"})
 
+#Set up OpenTelemetry
 provider = TracerProvider(resource=resource)
 processor = BatchSpanProcessor(ConsoleSpanExporter())
 provider.add_span_processor(processor)
