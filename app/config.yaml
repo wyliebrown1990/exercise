@@ -16,7 +16,5 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [jaeger, logging]  # Add Jaeger to the trace pipeline
-    metrics:
-      receivers: [otlp]
-      exporters: [prometheus, logging]  # Prometheus for metrics pipeline
+      exporters: [jaeger]
+
