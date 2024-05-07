@@ -2,11 +2,12 @@
 <html>
 <head>
     <title>Exercise Totals</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" /><link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" />
 </head>
 <body>
-    <h1>Exercise Results</h1>
+    <h1 class="title">Exercise Results</h1>
     <h2>This Week</h2>
-    <p>Pushups: {{ data.weekly_pushups }}</p>
+    <p class="results">Pushups: {{ data.weekly_pushups }}</p>
     <p>Pull-ups: {{ data.weekly_pullups }}</p>
     <h2>This Month</h2>
     <p>Pushups: {{ data.monthly_pushups }}</p>
@@ -15,4 +16,20 @@
     <p>Pushups: {{ data.yearly_pushups }}</p>
     <p>Pull-ups: {{ data.yearly_pullups }}</p>
 </body>
+
+<button>
+    <a href="http://127.0.0.1:5000/">Add More!</a>
+</button>
+
+<hr class="bottom-line">
+
+<footer>
+    <p>
+        <a href="https://github.com/wyliebrown1990" target="_blank">More Wylie Projects</a>
+    </p>
+    <p>
+        <a href="https://www.linkedin.com/in/wylie-brown-8908a252/" target="_blank">Connect With Wylie on Linkedin</a>
+    </p>
+</footer>
+
 </html>

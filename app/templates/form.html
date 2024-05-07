@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exercise Tracker</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" />
 </head>
-<body>
-    <h1>Exercise Tracker</h1>
+<div id="page-container">
+<body id="content-wrap">
+    <h1 class="title">Exercise Tracker</h1>
+    <div class="form_div">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
-        <p>
+        <p id="button">
             {{ form.username.label }}<br>
             {{ form.username(size=32) }}<br>
         </p>
@@ -25,7 +28,20 @@
             {{ form.exercise_date.label }}<br>
             {{ form.exercise_date() }}<br>
         </p>
-        <p>{{ form.submit() }}</p>
+        <p id="button">{{ form.submit() }}</p>
     </form>
+    </div>
 </body>
+
+<hr class="bottom-line">
+
+<footer id="footers">
+    <p>
+        <a href="https://github.com/wyliebrown1990" target="_blank">More Wylie Projects</a>
+    </p>
+    <p>
+        <a href="https://www.linkedin.com/in/wylie-brown-8908a252/" target="_blank">Connect With Wylie on Linkedin</a>
+    </p>
+</footer>
+</div>
 </html>
