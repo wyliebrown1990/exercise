@@ -74,7 +74,7 @@ def home():
 
 def handle_form_submission(form):
     with tracer.start_as_current_span("database_interaction") as db_span:
-        conn = psycopg2.connect(database="exercise", user="wyliebrown", password="test123", host="localhost", port="5432")
+        conn = psycopg2.connect(database="exercise", user="wyliebrown", password="test123", host="postgres", port="5432")
         cur = conn.cursor()
         try:
             # Attempt to insert user or get existing user_id
