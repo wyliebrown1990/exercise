@@ -7,6 +7,7 @@ import datetime
 import time
 import psycopg2
 import logging
+import os
 from opentelemetry import trace
 from opentelemetry.trace.status import StatusCode
 from opentelemetry.sdk.trace import TracerProvider
@@ -32,9 +33,10 @@ resource = Resource(attributes={
 
 # Configure the OTLP exporter
 otlp_exporter = OTLPSpanExporter(
-    endpoint="localhost:4317",  # Endpoint of the Otel Collector
+    endpoint=os.getenv('OTEL_EXPORTER_OTLP_ENDPOINT', 'otel-collector:4317'),  # Default to 'otel-collector:4317' if not set
     insecure=True  # Use TLS in production environments
 )
+
 
 # Set up OpenTelemetry Tracer Provider with OTLP exporter
 provider = TracerProvider(resource=resource)

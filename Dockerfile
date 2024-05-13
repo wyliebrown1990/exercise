@@ -1,7 +1,7 @@
 # Syntax directive to use Docker Buildx. This line is optional and depends on your Docker setup.
 # syntax=docker/dockerfile:1.3-labs
 
-FROM --platform=linux/amd64 python:3.8-slim
+FROM python:3.8-slim
 
 WORKDIR /app
 
