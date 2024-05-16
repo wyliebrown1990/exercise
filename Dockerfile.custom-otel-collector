@@ -1,0 +1,7 @@
+# Dockerfile.custom-otel-collector
+FROM busybox as builder
+COPY --from=otel/opentelemetry-collector-contrib:0.39.0 /otelcontribcol /otelcontribcol
+RUN chmod +x /otelcontribcol
+
+FROM otel/opentelemetry-collector-contrib:0.39.0
+COPY --from=builder /otelcontribcol /otelcontribcol

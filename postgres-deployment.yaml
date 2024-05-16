@@ -1,10 +1,22 @@
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pgdata-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: postgres
 spec:
   ports:
   - port: 5432
+    targetPort: 5432
   selector:
     app: postgres
 ---
@@ -13,6 +25,7 @@ kind: Deployment
 metadata:
   name: postgres
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: postgres
@@ -23,7 +36,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: 211125652144.dkr.ecr.us-east-1.amazonaws.com/postgres-13
+        image: postgres:13
         env:
         - name: POSTGRES_USER
           value: "wyliebrown"
@@ -35,7 +48,32 @@ spec:
         - containerPort: 5432
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
-          name: postgres-storage
+          name: pgdata
+        - mountPath: /docker-entrypoint-initdb.d
+          name: initdb
       volumes:
-      - name: postgres-storage
-        emptyDir: {}
+      - name: pgdata
+        persistentVolumeClaim:
+          claimName: pgdata-pvc
+      - name: initdb
+        configMap:
+          name: initdb-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: initdb-config
+data:
+  01_init.sql: |
+    CREATE TABLE IF NOT EXISTS Users (
+        user_id SERIAL PRIMARY KEY,
+        username TEXT UNIQUE NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS Exercises (
+        exercise_id SERIAL PRIMARY KEY,
+        user_id INT REFERENCES Users(user_id),
+        pushups INT NOT NULL,
+        pull_ups INT NOT NULL,
+        exercise_date DATE NOT NULL
+    );

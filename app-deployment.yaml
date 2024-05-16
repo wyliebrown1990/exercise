@@ -3,18 +3,19 @@ kind: Service
 metadata:
   name: exercise-app
 spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 5001
   selector:
     app: exercise-app
+  ports:
+  - protocol: TCP
+    port: 5001
+    targetPort: 5001
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: exercise-app
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: exercise-app
@@ -25,11 +26,11 @@ spec:
     spec:
       containers:
       - name: exercise-app
-        image: 211125652144.dkr.ecr.us-east-1.amazonaws.com/exercise:1.0
+        image: wyliebrown1990/exercise-app:1.0
         env:
         - name: DATABASE_URL
           value: "postgresql://wyliebrown:test123@postgres:5432/exercise"
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          value: "http://otel-collector:4317"
+          value: "otel-collector:4317"
         ports:
         - containerPort: 5001
